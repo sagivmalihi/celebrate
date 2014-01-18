@@ -44,7 +44,7 @@ NoEvent = lambda rdate: Event(event_id='empty-event', rdate=rdate, description="
 
 @app.route("/day/<date>")
 def get_date(date):
-    dateobj = dateutil.parser.parse(date)
+    dateobj = dateutil.parser.parse(date).date()
     try:
         e = random.choice(Event.query.filter_by(rdate=dateobj).all())
     except IndexError:
