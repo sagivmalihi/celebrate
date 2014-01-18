@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+    <script language="JavaScript" type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script>
+    (function() {
+        $.getJSON( "../day/2014-01-01", function( data ) {
+            var $ref =  $( "<a target='_blank'>" ).attr( "href", data.url )
+            $(".holiday").append(data.description);
+            $(".holiday").append($ref);
+            $(".date").append(data.rdate);
+        });
+    })();
+    </script>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic">
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700,400,300,100">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+
+        <title> Celebrategoodtim.es </title>
+    </head>
+
+    <body>
+        <div class="container">
+        <div class="date">It's </div>
+        <div class="whynot">And today is...</div>
+        <div class="holiday"></div>
+       <!-- <div class="backup"><a href="http://en.wikipedia.org/wiki/Chinese_New_Year" target="_blank">*</a></div> -->
+        <div class="checkout">Party like it's 1999 at <a href="https://foursquare.com/v/long-seng-%D7%9C%D7%95%D7%A0%D7%92-%D7%A1%D7%A0%D7%92/4c3cb4a0a97bbe9af8e1fadd" target="_blank"> Long Seng</a>, <br> a chinese restaurant 1<span style="font-size:18px; font-weight:300;">km.</span> away.</div>
+        <a class="other" href="http://celebrategoodtim.es/">Care for something different?</a>
+        </div>
+    </body>
+</html>
