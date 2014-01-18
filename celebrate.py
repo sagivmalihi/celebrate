@@ -66,7 +66,7 @@ def main():
     if args.create_db:
         db.create_all()
     else:
-        app.run()
+        app.run(app.config['HOST'], app.config['PORT'])
 
 if __name__ == "__main__":
     main()
