@@ -1,13 +1,24 @@
 <!doctype html>
 <html lang="en" dir="ltr">
     <script language="JavaScript" type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/jquery-ui.min.js"></script>
     <script>
     (function() {
-        $.getJSON( "../day/2014-01-01", function( data ) {
-            var $ref =  $( "<a target='_blank'>" ).attr( "href", data.url )
+        var d = new Date();
+        $.getJSON( "../day/" + d.toISOString(), function( data ) {
+            var serverdate = new Date(data.rdate);
+            var date_string = $.datepicker.formatDate( "DD, MM d, yy", serverdate 
+                               /* {
+                              dayNamesShort: $.datepicker.regional[ "fr" ].dayNamesShort,
+                              dayNames: $.datepicker.regional[ "fr" ].dayNames,
+                              monthNamesShort: $.datepicker.regional[ "fr" ].monthNamesShort,
+                              monthNames: $.datepicker.regional[ "fr" ].monthNames
+                                } */
+                                );
+            var ref =  $( "<a target='_blank'>" ).attr( "href", data.url ).html('*');
             $(".holiday").append(data.description);
-            $(".holiday").append($ref);
-            $(".date").append(data.rdate);
+            $(".holiday").append(ref);
+            $(".date").append(date_string);
         });
     })();
     </script>
@@ -27,7 +38,7 @@
         <div class="holiday"></div>
        <!-- <div class="backup"><a href="http://en.wikipedia.org/wiki/Chinese_New_Year" target="_blank">*</a></div> -->
         <div class="checkout">Party like it's 1999 at <a href="https://foursquare.com/v/long-seng-%D7%9C%D7%95%D7%A0%D7%92-%D7%A1%D7%A0%D7%92/4c3cb4a0a97bbe9af8e1fadd" target="_blank"> Long Seng</a>, <br> a chinese restaurant 1<span style="font-size:18px; font-weight:300;">km.</span> away.</div>
-        <a class="other" href="http://celebrategoodtim.es/">Care for something different?</a>
+        <a class="other" href="/">Care for something different?</a>
         </div>
     </body>
 </html>
