@@ -11,7 +11,6 @@ app = Flask(__name__)
 
 
 app.config.from_object('config')
-app.config['DEBUG'] = True
 
 #mysql = MySQL()
 #mysql.init_app(app)
