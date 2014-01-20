@@ -2,7 +2,6 @@ import flask
 import argparse
 import random
 from flask import Flask
-#from flaskext.mysql import MySQL
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask import redirect, url_for, send_from_directory
 import dateutil.parser
@@ -19,12 +18,14 @@ class Event(db.Model):
     rdate = db.Column(db.Date)
     description = db.Column(db.String(1000))
     url = db.Column(db.String(2000))
+    affiliation = db.Column(db.String(1000), default='')
 
-    def __init__(self, event_id, rdate, description, url):
+    def __init__(self, event_id, rdate, description, url, affiliation=''):
         self.event_id = event_id
         self.rdate = rdate
         self.description = description 
         self.url = url
+        self.affiliation = affiliation
     
     @classmethod
     def get_columns(cls):
@@ -35,14 +36,16 @@ class Event(db.Model):
                     rdate=self.rdate.isoformat(),
                     description=self.description,
                     url=self.url,
+                    affiliation=self.affiliation,
                     )
 
     @classmethod
-    def from_dict(cls, event_id, rdate, description, url):
+    def from_dict(cls, event_id, rdate, description, url, affiliation):
         return cls(event_id=event_id,
                    rdate=parse_isodate(rdate),
                    description=description,
                    url=url,
+                   affiliation=affiliation,
                    )
 
     def __repr__(self):
