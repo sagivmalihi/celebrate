@@ -4,21 +4,12 @@
     <script language="JavaScript" type="text/javascript" src="js/jquery-ui.min.js"></script>
     <script>
     (function() {
-        var d = new Date();
-        $.getJSON( "../day/" + d.toISOString(), function( data ) {
+        var client_date = new Date();
+        $.getJSON( "../day/" + client_date.toISOString(), function( data ) {
             var serverdate = new Date(data.rdate);
-            var date_string = $.datepicker.formatDate( "DD, MM d, yy", serverdate 
-                               /* {
-                              dayNamesShort: $.datepicker.regional[ "fr" ].dayNamesShort,
-                              dayNames: $.datepicker.regional[ "fr" ].dayNames,
-                              monthNamesShort: $.datepicker.regional[ "fr" ].monthNamesShort,
-                              monthNames: $.datepicker.regional[ "fr" ].monthNames
-                                } */
-                                );
             var ref =  $( "<a target='_blank'>" ).attr( "href", data.url ).html('*');
             $(".holiday").append(data.description);
             $(".holiday").append(ref);
-            $(".date").append(date_string);
         });
     })();
     </script>
@@ -40,4 +31,16 @@
         <a class="other" href="/">Care for something different?</a>
         </div>
     </body>
+    <script>
+        var client_date = new Date();
+        var date_string = $.datepicker.formatDate( "DD, MM d, yy", client_date 
+                           /* {
+                          dayNamesShort: $.datepicker.regional[ "fr" ].dayNamesShort,
+                          dayNames: $.datepicker.regional[ "fr" ].dayNames,
+                          monthNamesShort: $.datepicker.regional[ "fr" ].monthNamesShort,
+                          monthNames: $.datepicker.regional[ "fr" ].monthNames
+                            } */
+                            );
+            $(".date").append(date_string);
+    </script>
 </html>
