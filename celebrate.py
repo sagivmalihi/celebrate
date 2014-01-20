@@ -4,11 +4,19 @@ import random
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask import redirect, url_for, send_from_directory
+from flask import request
 import dateutil.parser
+import foursquare
+
+DEFAULT_FOURSQUARE_SEARCH_RADIUS = 2000
 
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
+foursquare_client = foursquare.Foursquare(client_id=app.config['FOURSQUARE_CLIENT_ID'], 
+                                          client_secret=app.config['FOURSQUARE_CLIENT_SECRET'], 
+                                          # redirect_uri='http://fondu.com/oauth/authorize',
+                                          )
 
 def parse_isodate(date):
     return dateutil.parser.parse(date).date()
@@ -53,6 +61,24 @@ class Event(db.Model):
 
 NoEvent = lambda rdate: Event(event_id='empty-event', rdate=rdate, description="Nothing!", url="http://en.wikipedia.org/wiki/Nothing")
 
+def generate_foursquare_link(venue):
+    FOURSQUARE_LINK_TEMPLATE = u"https://foursquare.com/v/{name}/{id}"
+    name = venue['name'].lower().replace(' ','-')
+    id = venue['id']
+    return FOURSQUARE_LINK_TEMPLATE.format(name=name, id=id)
+
+def get_foursquare_suggestion(location):
+    loc_string = "%2.2f,%2.2f" % tuple(location)
+    suggestions = foursquare_client.venues.search(params=dict(query='coffee', ll=loc_string, intent='browse', radius=DEFAULT_FOURSQUARE_SEARCH_RADIUS))
+    try:
+        suggestion = random.choice(suggestions['venues'])
+    except Exception:
+        return {}
+    else:
+        name = suggestion['name']
+        foursquare_link = generate_foursquare_link(suggestion)
+        return dict(name=name, link=foursquare_link)
+
 @app.route("/day/<date>")
 def get_date(date):
     dateobj = parse_isodate(date)
@@ -60,7 +86,13 @@ def get_date(date):
         e = random.choice(Event.query.filter_by(rdate=dateobj).all())
     except IndexError:
         e = NoEvent(dateobj)
-    return flask.jsonify(e.to_dict())
+    response = e.to_dict()
+    
+    location = map(float, (request.args['loc[coords][latitude]'], request.args['loc[coords][longitude]']))
+    response['loc'] = location
+    suggestion = get_foursquare_suggestion(location)
+    response['foursquare'] = suggestion
+    return flask.jsonify(response)
 
 @app.route('/static/<path:filename>')
 def send_foo(filename):
