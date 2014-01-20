@@ -8,14 +8,11 @@ from flask import redirect, url_for, send_from_directory
 import dateutil.parser
 
 app = Flask(__name__)
-
-
 app.config.from_object('config')
-
-#mysql = MySQL()
-#mysql.init_app(app)
-
 db = SQLAlchemy(app)
+
+def parse_isodate(date):
+    return dateutil.parser.parse(date).date()
 
 class Event(db.Model):
     event_id = db.Column(db.String(80), primary_key=True)
@@ -29,12 +26,24 @@ class Event(db.Model):
         self.description = description 
         self.url = url
     
+    @classmethod
+    def get_columns(cls):
+        return cls.__table__.columns.keys()
+
     def to_dict(self):
         return dict(event_id=self.event_id,
                     rdate=self.rdate.isoformat(),
                     description=self.description,
                     url=self.url,
                     )
+
+    @classmethod
+    def from_dict(cls, event_id, rdate, description, url):
+        return cls(event_id=event_id,
+                   rdate=parse_isodate(rdate),
+                   description=description,
+                   url=url,
+                   )
 
     def __repr__(self):
         return '<Event {}>'.format(self.event_id)
@@ -43,7 +52,7 @@ NoEvent = lambda rdate: Event(event_id='empty-event', rdate=rdate, description="
 
 @app.route("/day/<date>")
 def get_date(date):
-    dateobj = dateutil.parser.parse(date).date()
+    dateobj = parse_isodate(date)
     try:
         e = random.choice(Event.query.filter_by(rdate=dateobj).all())
     except IndexError:
