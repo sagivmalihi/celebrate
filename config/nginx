@@ -7,18 +7,15 @@ server
 
     location /
     { 
-        try_files $uri @celebrate @rewrites; 
+        try_files $uri @celebrate; 
     }
 
     location @celebrate
     {
-      include uwsgi_params;
-      uwsgi_pass unix:/tmp/celebrate-uwsgi.sock;
-    }
-
-    location @rewrites {
         rewrite   ^/favicon.ico$   /static/favicon.ico     permanent;
-        rewrite   ^/?$             /static/index.html             permanent;
+        rewrite   ^/?$             /static/index.html      permanent;
+        include uwsgi_params;
+        uwsgi_pass unix:/tmp/celebrate-uwsgi.sock;
     }
 }
 
