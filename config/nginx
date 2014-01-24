@@ -5,6 +5,12 @@ server
 
     location / { try_files $uri @celebrate; }
 
+    # path for static files
+    location  /static {
+        alias /home/ubuntu/celebrate/static/;
+        autoindex on;
+    }
+
     location @celebrate
     {
       include uwsgi_params;
