@@ -18,7 +18,7 @@ server
 
     location @rewrites {
         rewrite   ^/favicon.ico$   /static/favicon.ico     permanent;
-        rewrite   ^/?$             /index.html             permanent;
+        rewrite   ^/?$             /static/index.html             permanent;
     }
 }
 
