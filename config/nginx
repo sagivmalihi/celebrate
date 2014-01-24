@@ -2,19 +2,23 @@ server
 {
     listen 8080 default_server;
     listen [::]:8080 default_server ipv6only=on;
+    
+    root /home/ubuntu/celebrate/;
 
-    location / { try_files $uri @celebrate; }
-
-    # path for static files
-    location  /static {
-        alias /home/ubuntu/celebrate/static/;
-        autoindex on;
+    location /
+    { 
+        try_files $uri @celebrate @rewrites; 
     }
 
     location @celebrate
     {
       include uwsgi_params;
       uwsgi_pass unix:/tmp/celebrate-uwsgi.sock;
+    }
+
+    location @rewrites {
+        rewrite   ^/favicon.ico$   /static/favicon.ico     permanent;
+        rewrite   ^/?$             /index.html             permanent;
     }
 }
 
