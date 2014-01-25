@@ -15,6 +15,9 @@ def read_csv(filename):
             db.session.add(event)
     db.session.commit()
 
-if __name__=='__main__':
+def main():
     filename = sys.argv[1]
     read_csv(filename)
+
+if __name__=='__main__':
+    main()
