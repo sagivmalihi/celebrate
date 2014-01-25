@@ -11,7 +11,9 @@ import foursquare
 DEFAULT_FOURSQUARE_SEARCH_RADIUS = 2000
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object('config.defaults')
+app.config.from_object('config.current')
+
 db = SQLAlchemy(app)
 foursquare_client = foursquare.Foursquare(client_id=app.config['FOURSQUARE_CLIENT_ID'], 
                                           client_secret=app.config['FOURSQUARE_CLIENT_SECRET'], 
