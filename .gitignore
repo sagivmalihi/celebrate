@@ -2,6 +2,8 @@
 events.db
 # too secret for git
 events-key.cer
+#virtualenv
+venv
 
 *.py[cod]
 
