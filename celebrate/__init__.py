@@ -1,5 +1,4 @@
 import flask
-import argparse
 import random
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -11,8 +10,8 @@ import foursquare
 DEFAULT_FOURSQUARE_SEARCH_RADIUS = 2000
 
 app = Flask(__name__)
-app.config.from_object('config.defaults')
-app.config.from_object('config.current')
+app.config.from_object('celebrate.config.defaults')
+app.config.from_object('celebrate.config.current')
 
 db = SQLAlchemy(app)
 foursquare_client = foursquare.Foursquare(client_id=app.config['FOURSQUARE_CLIENT_ID'], 
@@ -104,14 +103,4 @@ def send_foo(filename):
 def static_index():
     return redirect(url_for('static', filename='index.html'))
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--create-db', action='store_true', default=False)
-    args = parser.parse_args()
-    if args.create_db:
-        db.create_all()
-    else:
-        app.run(app.config['HOST'], app.config['PORT'])
 
-if __name__ == "__main__":
-    main()
